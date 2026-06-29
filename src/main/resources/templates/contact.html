@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Support - NSBM Lost & Found</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Campus Lost & Found</a>
+        <div class="nav-links">
+            <span class="welcome-text" sec:authorize="isAuthenticated()">Welcome, <a th:href="@{/profile}" style="text-decoration: underline; color: inherit; font-weight: bold;"><span sec:authentication="principal.name"></span></a></span>
+            <a th:href="@{/item/new}" sec:authorize="isAuthenticated()" class="btn">Report Item</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+            <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="btn btn-secondary" style="background: transparent; color: var(--text-main); border: none; box-shadow: none;">Sign In</a>
+            <a th:href="@{/register}" sec:authorize="!isAuthenticated()" class="btn" style="background: white; color: var(--primary-color);">Create Account</a>
+        </div>
+    </nav>
+
+    <div class="container animated delay-1" style="margin-top: 3rem;">
+        <div class="form-container" style="max-width: 800px; text-align: center;">
+            <h2>Contact Support</h2>
+            <div style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.8;">
+                <p style="margin-bottom: 1.5rem;">Having trouble with the system? Or need to escalate a missing item case? The NSBM Green University IT and Security teams are here to help.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center; margin-top: 2rem;">
+                    <div style="background: rgba(99, 102, 241, 0.1); padding: 1.5rem; border-radius: 1rem; width: 100%; max-width: 400px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.2rem;">NSBM Security Desk</h4>
+                        <p style="margin: 0; font-weight: 600;">+94 11 544 5000</p>
+                        <p style="margin: 0; font-size: 0.9rem;">Available 24/7</p>
+                    </div>
+                    
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 1rem; width: 100%; max-width: 400px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <h4 style="color: var(--success); margin-bottom: 0.5rem; font-size: 1.2rem;">IT Helpdesk</h4>
+                        <p style="margin: 0; font-weight: 600;">support@nsbm.ac.lk</p>
+                        <p style="margin: 0; font-size: 0.9rem;">Weekdays 8:00 AM - 5:00 PM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

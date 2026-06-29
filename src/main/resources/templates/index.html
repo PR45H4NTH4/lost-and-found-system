@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Lost & Found System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Campus Lost & Found</a>
+        <div class="nav-links">
+            <span class="welcome-text" sec:authorize="isAuthenticated()">Welcome, <a th:href="@{/profile}" style="text-decoration: underline; color: inherit; font-weight: bold;"><span sec:authentication="principal.name"></span></a></span>
+            
+            <a th:href="@{/item/new}" sec:authorize="isAuthenticated()" class="btn">Report Item</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+
+            <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="btn btn-secondary" style="background: transparent; color: var(--text-main); border: none; box-shadow: none;">Sign In</a>
+            <a th:href="@{/register}" sec:authorize="!isAuthenticated()" class="btn" style="background: white; color: var(--primary-color);">Create Account</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Find What You Lost, Return What You Found</h1>
+        <p>The official campus platform for reuniting students with their misplaced belongings. Report a lost item or help someone by posting a found item.</p>
+        
+        <div style="margin-top: 1rem;" sec:authorize="isAuthenticated()">
+            <a th:href="@{/item/new}" class="btn" style="background: white !important; color: var(--primary-color) !important; font-size: 1.1rem; padding: 0.8rem 2rem;">Report an Item Now</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Advanced Search Form -->
+        <form th:action="@{/page/1}" method="get" class="search-bar">
+            <input type="hidden" name="sortField" th:value="${sortField}">
+            <input type="hidden" name="sortDir" th:value="${sortDir}">
+            
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by title or description..." class="form-control" style="flex-grow: 1;">
+            
+            <select name="statusFilter" class="form-control" style="width: 200px;">
+                <option value="">All Statuses</option>
+                <option value="LOST" th:selected="${statusFilter == 'LOST'}">Lost Items</option>
+                <option value="FOUND" th:selected="${statusFilter == 'FOUND'}">Found Items</option>
+                <option value="RESOLVED" th:selected="${statusFilter == 'RESOLVED'}">Resolved</option>
+            </select>
+            
+            <button type="submit" class="btn">Search</button>
+            <a th:href="@{/}" class="btn btn-secondary" th:if="${keyword != null or statusFilter != null}">Clear</a>
+        </form>
+
+        <!-- Items Grid -->
+        <div th:if="${totalItems == 0}" style="margin-top: 3rem; text-align: center; padding: 3rem; background: var(--surface-color); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <svg style="width: 64px; height: 64px; color: var(--text-muted); margin-bottom: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <h3 style="color: var(--text-main); font-size: 1.2rem; margin-bottom: 0.5rem;">No items found</h3>
+            <p style="color: var(--text-muted);">Try adjusting your search filters or be the first to report a new item!</p>
+        </div>
+
+        <div class="items-grid" th:if="${totalItems > 0}">
+            <div th:each="item : ${listItems}" class="card">
+                <img th:if="${item.imagePath != null}" th:src="@{${item.imagePath}}" class="card-img" alt="Item Image">
+                <div th:unless="${item.imagePath != null}" class="card-img" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #F3F4F6; color: #9CA3AF;">
+                    <svg style="width: 48px; height: 48px; margin-bottom: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span>No Image</span>
+                </div>
+                
+                <div class="card-body">
+                    <span th:class="'badge ' + (${item.status.name() == 'LOST'} ? 'badge-lost' : 'badge-found')" 
+                          th:text="${item.status}">STATUS</span>
+                    
+                    <h3 class="card-title" th:text="${item.title}">Item Title</h3>
+                    <div class="card-meta">
+                        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span th:text="${item.date}">Date</span>
+                        <span style="margin: 0 4px;">•</span>
+                        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span th:text="${item.location}">Location</span>
+                    </div>
+                    
+                    <p class="card-desc" th:text="${item.description}">Description</p>
+                       
+                    <a th:href="@{/item/{id}(id=${item.id})}" class="btn btn-secondary" style="width: 100%;">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div th:if="${totalPages > 1}" class="pagination animated delay-3">
+            <a th:if="${currentPage > 1}" th:href="@{'/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${statusFilter != null ? '&statusFilter=' + statusFilter : ''}}">First</a>
+            <span th:unless="${currentPage > 1}">First</span>
+            
+            <a th:if="${currentPage > 1}" th:href="@{'/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${statusFilter != null ? '&statusFilter=' + statusFilter : ''}}">Prev</a>
+            <span th:unless="${currentPage > 1}">Prev</span>
+
+            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${statusFilter != null ? '&statusFilter=' + statusFilter : ''}}">[[${i}]]</a>
+                <span th:unless="${currentPage != i}" class="active">[[${i}]]</span>
+            </span>
+            
+            <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${statusFilter != null ? '&statusFilter=' + statusFilter : ''}}">Next</a>
+            <span th:unless="${currentPage < totalPages}">Next</span>
+            
+            <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${statusFilter != null ? '&statusFilter=' + statusFilter : ''}}">Last</a>
+            <span th:unless="${currentPage < totalPages}">Last</span>
+        </div>
+    </div>
+    
+        <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

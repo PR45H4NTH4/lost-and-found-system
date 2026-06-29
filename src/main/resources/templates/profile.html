@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - Campus Lost & Found</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Campus Lost & Found</a>
+        <div class="nav-links">
+            <span class="welcome-text" sec:authorize="isAuthenticated()">Welcome, <span sec:authentication="principal.name"></span></span>
+            <a th:href="@{/item/new}" sec:authorize="isAuthenticated()" class="btn">Report Item</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container animated delay-1" style="margin-top: 3rem;">
+        <div class="form-container" style="max-width: 900px; padding: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 2rem; margin-bottom: 2rem; flex-wrap: wrap; gap: 2rem;">
+                
+                <!-- Left: Profile Info & Picture -->
+                <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
+                    <!-- Profile Picture -->
+                    <div style="text-align: center;">
+                        <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; background: #e2e8f0; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: 0 auto 1rem;">
+                            <img th:if="${user.profileImage != null}" th:src="@{${user.profileImage}}" style="width: 100%; height: 100%; object-fit: cover;" alt="Profile Picture">
+                            <svg th:unless="${user.profileImage != null}" style="width: 60%; height: 60%; margin-top: 20%; color: #94a3b8;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        </div>
+                        <form th:action="@{/profile/upload-image}" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
+                            <label for="imageUpload" style="cursor: pointer; font-size: 0.8rem; color: var(--primary-color); font-weight: 600; background: rgba(99, 102, 241, 0.1); padding: 0.3rem 0.8rem; border-radius: 1rem;">Change Photo</label>
+                            <input type="file" id="imageUpload" name="image" style="display: none;" accept="image/png, image/jpeg, image/jpg" onchange="this.form.submit()">
+                        </form>
+                    </div>
+
+                    <!-- User Details -->
+                    <div>
+                        <span th:text="${user.role.name() == 'ROLE_ADMIN' ? 'Administrator' : 'Student Account'}" class="badge" style="background: var(--primary-color); color: white; display: inline-block; margin-bottom: 0.5rem; padding: 0.3rem 0.8rem; font-size: 0.7rem;"></span>
+                        <h2 style="margin: 0; font-size: 2.2rem; color: var(--text-main);" th:text="${user.name}">John Doe</h2>
+                        <p style="margin: 0.2rem 0 1rem 0; color: var(--text-muted); font-size: 1.1rem;" th:text="${user.email}">user@example.com</p>
+                    </div>
+                </div>
+
+                <!-- Right: Stats -->
+                <div th:unless="${user.role.name() == 'ROLE_ADMIN'}" style="background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); min-width: 200px; text-align: center;">
+                    <h4 style="margin: 0; color: var(--text-muted); font-weight: 500;">Total Items Reported</h4>
+                    <p style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin: 0.5rem 0 0 0;" th:text="${userItems != null ? userItems.size() : 0}">0</p>
+                </div>
+            </div>
+
+            <!-- Admin View (RBAC) -->
+            <div th:if="${user.role.name() == 'ROLE_ADMIN'}">
+                <h3>Admin Dashboard - User Management</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">As an administrator, you have visibility over all registered users in the system.</p>
+                
+                <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
+                            <tr>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600;">ID</th>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600;">Name</th>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600;">Email</th>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600;">Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sysUser : ${allUsers}" style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 1rem;" th:text="${sysUser.id}">1</td>
+                                <td style="padding: 1rem; font-weight: 500;" th:text="${sysUser.name}">User Name</td>
+                                <td style="padding: 1rem; color: var(--text-muted);" th:text="${sysUser.email}">email</td>
+                                <td style="padding: 1rem;">
+                                    <span th:class="'badge ' + (${sysUser.role.name() == 'ROLE_ADMIN'} ? 'badge-lost' : 'badge-found')" th:text="${sysUser.role}">ROLE</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Normal User View -->
+            <div th:unless="${user.role.name() == 'ROLE_ADMIN'}">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0;">My Reported Items</h3>
+                    <a th:href="@{/item/new}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">+ Report New Item</a>
+                </div>
+                
+                <div th:if="${userItems == null or userItems.empty}" style="text-align: center; padding: 3rem; background: var(--surface-color); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <svg style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                    <p style="color: var(--text-muted); margin: 0;">You haven't reported any lost or found items yet.</p>
+                </div>
+
+                <div class="items-grid" th:unless="${userItems == null or userItems.empty}">
+                    <div th:each="item : ${userItems}" class="card" style="box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                        <img th:if="${item.imagePath != null}" th:src="@{${item.imagePath}}" class="card-img" style="height: 150px;" alt="Item Image">
+                        <div th:unless="${item.imagePath != null}" class="card-img" style="height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #F3F4F6; color: #9CA3AF;">
+                            <span>No Image</span>
+                        </div>
+                        
+                        <div class="card-body" style="padding: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <span th:class="'badge ' + (${item.status.name() == 'LOST'} ? 'badge-lost' : (${item.status.name() == 'FOUND'} ? 'badge-found' : 'badge-resolved'))" th:text="${item.status}">STATUS</span>
+                                <span style="font-size: 0.8rem; color: var(--text-muted);" th:text="${item.date}">Date</span>
+                            </div>
+                            
+                            <h4 class="card-title" style="margin: 0.5rem 0; font-size: 1.1rem;" th:text="${item.title}">Item Title</h4>
+                            
+                            <a th:href="@{/item/{id}(id=${item.id})}" class="btn btn-secondary" style="width: 100%; padding: 0.5rem; font-size: 0.9rem; margin-top: 1rem;">Manage Item</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

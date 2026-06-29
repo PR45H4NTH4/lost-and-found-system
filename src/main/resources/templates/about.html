@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us - NSBM Lost & Found</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Campus Lost & Found</a>
+        <div class="nav-links">
+            <span class="welcome-text" sec:authorize="isAuthenticated()">Welcome, <a th:href="@{/profile}" style="text-decoration: underline; color: inherit; font-weight: bold;"><span sec:authentication="principal.name"></span></a></span>
+            <a th:href="@{/item/new}" sec:authorize="isAuthenticated()" class="btn">Report Item</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+            <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="btn btn-secondary" style="background: transparent; color: var(--text-main); border: none; box-shadow: none;">Sign In</a>
+            <a th:href="@{/register}" sec:authorize="!isAuthenticated()" class="btn" style="background: white; color: var(--primary-color);">Create Account</a>
+        </div>
+    </nav>
+
+    <div class="container animated delay-1" style="margin-top: 3rem;">
+        <div class="form-container" style="max-width: 800px;">
+            <h2>About Us</h2>
+            <div style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.8;">
+                <p style="margin-bottom: 1.5rem;">Welcome to the <strong>NSBM Green University Lost and Found System</strong>. We understand that losing personal belongings on a large and bustling campus can be stressful. Our mission is to provide a seamless, community-driven platform to reunite students, staff, and faculty with their misplaced items.</p>
+                <p style="margin-bottom: 1.5rem;">Built exclusively for the NSBM community, this platform allows you to quickly report items you've lost or post items you've found across our green campus facilities—from the main auditorium to the student cafeteria and lecture halls.</p>
+                <p>Together, we can ensure a trustworthy and helpful environment at NSBM Green University. Thank you for being a responsible member of our community!</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

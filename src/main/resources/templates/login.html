@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Lost and Found</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Campus Lost & Found</a>
+        <div class="nav-links">
+            <a th:href="@{/register}" class="btn">Register</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h2>Welcome Back</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-top: -1rem; margin-bottom: 2rem;">Sign in to your account to continue</p>
+            
+            <div th:if="${param.error}" class="alert alert-danger" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; text-align: center; font-weight: 500;">
+                Invalid email or password.
+            </div>
+            
+            <div th:if="${param.logout}" class="alert alert-success" style="background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; text-align: center; font-weight: 500;">
+                You have been logged out.
+            </div>
+
+            <div th:if="${param.success}" class="alert alert-success" style="background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; text-align: center; font-weight: 500;">
+                Account successfully created! Please log in.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Email</label>
+                    <input type="email" id="username" name="username" class="form-control" required autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn" style="width: 100%;">Login</button>
+            </form>
+            
+            <p style="margin-top: 1rem; text-align: center;">
+                Don't have an account? <a th:href="@{/register}">Register here</a>
+            </p>
+        </div>
+    </div>
+        <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

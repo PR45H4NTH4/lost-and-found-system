@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Item - Campus Lost & Found</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Campus Lost & Found</a>
+        <div class="nav-links">
+            <span class="welcome-text" sec:authorize="isAuthenticated()">Welcome, <a th:href="@{/profile}" style="text-decoration: underline; color: inherit; font-weight: bold;"><span sec:authentication="principal.name"></span></a></span>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container animated delay-1" style="margin-top: 3rem;">
+        <div class="form-container">
+            <h2>Report Lost or Found Item</h2>
+            
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+            <form th:action="@{/item/save}" method="post" th:object="${item}" enctype="multipart/form-data">
+                
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" th:field="*{title}" class="form-control" placeholder="E.g., Blue Backpack, iPhone 12">
+                    <p th:errors="*{title}" style="color: var(--danger); font-size: 0.85rem;" th:if="${#fields.hasErrors('title')}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea th:field="*{description}" class="form-control" rows="4" placeholder="Provide clear details about the item..."></textarea>
+                    <p th:errors="*{description}" style="color: var(--danger); font-size: 0.85rem;" th:if="${#fields.hasErrors('description')}"></p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" th:field="*{location}" class="form-control" placeholder="Where was it lost/found?">
+                    <p th:errors="*{location}" style="color: var(--danger); font-size: 0.85rem;" th:if="${#fields.hasErrors('location')}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" th:field="*{date}" class="form-control">
+                    <p th:errors="*{date}" style="color: var(--danger); font-size: 0.85rem;" th:if="${#fields.hasErrors('date')}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select th:field="*{status}" class="form-control">
+                        <option value="LOST">Lost - I lost this item</option>
+                        <option value="FOUND">Found - I found this item</option>
+                    </select>
+                    <p th:errors="*{status}" style="color: var(--danger); font-size: 0.85rem;" th:if="${#fields.hasErrors('status')}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label>Image Upload</label>
+                    <input type="file" name="image" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                    <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">Max file size: 5MB. Optional.</small>
+                </div>
+                
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">Submit Item</button>
+            </form>
+            
+            <div style="margin-top: 1rem; text-align: center;">
+                <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

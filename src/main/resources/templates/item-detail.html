@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${item.title} + ' - Details'">Item Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .detail-card {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .detail-card {
+                flex-direction: row;
+            }
+            .detail-img-container {
+                flex: 1;
+                max-width: 50%;
+            }
+            .detail-info {
+                flex: 1;
+            }
+        }
+        .detail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 300px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+        .detail-info {
+            padding: 2rem;
+        }
+        .info-row {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Lost & Found System</a>
+        <div class="nav-links">
+            <span sec:authorize="isAuthenticated()">Welcome, <a th:href="@{/profile}" style="text-decoration: underline; color: inherit; font-weight: bold;"><span sec:authentication="principal.name"></span></a></span>
+            <a th:href="@{/}" class="btn">Back to List</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="detail-card">
+            <div class="detail-img-container">
+                <img th:if="${item.imagePath != null}" th:src="@{${item.imagePath}}" class="detail-img" alt="Item Image">
+                <div th:unless="${item.imagePath != null}" class="detail-img">
+                    No Image Provided
+                </div>
+            </div>
+            
+            <div class="detail-info">
+                <span th:class="'badge ' + (${item.status.name() == 'LOST'} ? 'badge-lost' : 'badge-found')" 
+                      th:text="${item.status}" style="font-size: 1rem; padding: 0.5rem 1rem;">STATUS</span>
+                
+                <h1 style="margin: 1rem 0;" th:text="${item.title}">Item Title</h1>
+                
+                <div class="info-row">
+                    <span class="info-label">Reported by:</span>
+                    <span th:text="${item.user.name}">User Name</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Contact:</span>
+                    <a th:href="'mailto:' + ${item.user.email}" th:text="${item.user.email}">user@example.com</a>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Location:</span>
+                    <span th:text="${item.location}">Location Details</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Date:</span>
+                    <span th:text="${item.date}">Date Details</span>
+                </div>
+                
+                <div class="info-row" style="border-bottom: none;">
+                    <span class="info-label" style="display:block; margin-bottom:0.5rem;">Description:</span>
+                    <p th:text="${item.description}" style="white-space: pre-wrap;">Full description here.</p>
+                </div>
+                
+                <!-- Action Buttons for Owner / Admin -->
+                <div th:if="${canEdit}" style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <form th:action="@{/item/delete/{id}(id=${item.id})}" method="post">
+                        <button type="submit" class="btn" style="background-color: #EF4444;" onclick="return confirm('Are you sure you want to delete this item?');">
+                            <svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            Delete Item
+                        </button>
+                    </form>
+
+                    <form th:if="${item.status.name() != 'RESOLVED'}" th:action="@{/item/{id}/resolve(id=${item.id})}" method="post">
+                        <button type="submit" class="btn btn-secondary" onclick="return confirm('Are you sure you want to mark this item as RESOLVED?');">
+                            <svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Mark as Resolved
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+        <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

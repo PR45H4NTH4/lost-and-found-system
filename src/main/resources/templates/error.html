@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - Lost and Found</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Lost & Found System</a>
+    </nav>
+
+    <div class="container" style="text-align: center; margin-top: 5rem;">
+        <h1 style="color: var(--danger); margin-bottom: 1rem;">Oops! Something went wrong.</h1>
+        <p th:text="${errorMessage}" style="font-size: 1.2rem; margin-bottom: 2rem;">Error details</p>
+        
+        <a th:href="@{/}" class="btn">Return to Home</a>
+    </div>
+        <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

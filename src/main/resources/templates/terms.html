@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Terms of Service - NSBM Lost & Found</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">Campus Lost & Found</a>
+        <div class="nav-links">
+            <span class="welcome-text" sec:authorize="isAuthenticated()">Welcome, <a th:href="@{/profile}" style="text-decoration: underline; color: inherit; font-weight: bold;"><span sec:authentication="principal.name"></span></a></span>
+            <a th:href="@{/item/new}" sec:authorize="isAuthenticated()" class="btn">Report Item</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+            <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="btn btn-secondary" style="background: transparent; color: var(--text-main); border: none; box-shadow: none;">Sign In</a>
+            <a th:href="@{/register}" sec:authorize="!isAuthenticated()" class="btn" style="background: white; color: var(--primary-color);">Create Account</a>
+        </div>
+    </nav>
+
+    <div class="container animated delay-1" style="margin-top: 3rem;">
+        <div class="form-container" style="max-width: 800px;">
+            <h2>Terms of Service</h2>
+            <div style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.8;">
+                <p style="margin-bottom: 1.5rem;">By accessing and using the NSBM Green University Lost & Found platform, you agree to abide by the university's code of conduct and these terms.</p>
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">User Responsibilities</h3>
+                <ul style="margin-bottom: 1.5rem; margin-left: 1.5rem;">
+                    <li>You must provide accurate and truthful information when reporting lost or found items.</li>
+                    <li>Do not upload inappropriate images or false claims.</li>
+                    <li>Found items of high value should ideally be handed over to NSBM Security while logging it here.</li>
+                </ul>
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Account Suspension</h3>
+                <p style="margin-bottom: 1.5rem;">NSBM Green University reserves the right to suspend or terminate accounts that abuse the platform, submit fraudulent claims, or violate university policies.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer animated delay-3">
+        <div class="footer-content">
+            <div class="footer-logo">Campus Lost & Found</div>
+            <div class="footer-links">
+                <a th:href="@{/about}">About Us</a>
+                <a th:href="@{/privacy}">Privacy Policy</a>
+                <a th:href="@{/terms}">Terms of Service</a>
+                <a th:href="@{/contact}">Contact Support</a>
+            </div>
+            <p>&copy; 2026 NSBM Green University Lost & Found System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
