@@ -42,7 +42,7 @@ public class Item {
     @Column(nullable = false)
     private ItemStatus status;
 
-    private String imagePath; // Path to the uploaded image
+    private String imagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

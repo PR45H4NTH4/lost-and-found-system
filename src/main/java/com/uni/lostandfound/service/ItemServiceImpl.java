@@ -43,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
             try {
                 status = ItemStatus.valueOf(statusFilter.toUpperCase());
             } catch (IllegalArgumentException e) {
-                // Ignore invalid status
+
             }
         }
 
@@ -65,18 +65,18 @@ public class ItemServiceImpl implements ItemService {
 
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
-                // Create directory if it doesn't exist
+
                 Path uploadPath = Paths.get(uploadDir);
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
 
-                // Generate unique filename
+
                 String originalFilename = imageFile.getOriginalFilename();
                 String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
                 String uniqueFilename = UUID.randomUUID().toString() + extension;
 
-                // Save file
+
                 Path filePath = uploadPath.resolve(uniqueFilename);
                 Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
@@ -99,7 +99,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = getItemById(id);
         User user = userRepository.findByEmail(userEmail).orElse(null);
         
-        // Ensure only the owner or an admin can delete
+
         if (user != null && (item.getUser().getId().equals(user.getId()) || user.getRole().name().equals("ROLE_ADMIN"))) {
             itemRepository.deleteById(id);
         } else {
