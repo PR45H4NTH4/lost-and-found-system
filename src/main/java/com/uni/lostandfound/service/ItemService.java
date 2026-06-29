@@ -11,4 +11,5 @@ public interface ItemService {
     Item saveItem(Item item, MultipartFile imageFile, String userEmail);
     Item getItemById(Long id);
     void deleteItemById(Long id, String userEmail);
+    void resolveItemById(Long id, String userEmail);
 }

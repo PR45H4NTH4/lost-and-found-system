@@ -6,10 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import com.uni.lostandfound.entity.User;
+
+import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findByStatus(ItemStatus status, Pageable pageable);
+    
+    List<Item> findByUserOrderByDateDesc(User user);
     
     Page<Item> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String title, String description, Pageable pageable);
     
