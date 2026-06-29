@@ -24,7 +24,7 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (userRepository.count() == 0) {
-            // Create a dummy user
+
             User user1 = new User();
             user1.setName("John Doe");
             user1.setEmail("john@example.com");
@@ -39,7 +39,7 @@ public class DataSeeder implements CommandLineRunner {
             user2.setRole(Role.ROLE_USER);
             userRepository.save(user2);
 
-            // Create dummy items
+
             itemRepository.save(new Item(null, "Brown Leather Wallet", "Lost my brown leather wallet near the library entrance. Contains ID and some cash.", "Main Library", LocalDate.now().minusDays(2), ItemStatus.LOST, "/uploads/wallet.jpg", user1));
             itemRepository.save(new Item(null, "Keys with Red Keychain", "Found a set of keys with a red Ferrari keychain on the cafeteria bench.", "Student Cafeteria", LocalDate.now().minusDays(1), ItemStatus.FOUND, "/uploads/keys.jpg", user2));
             itemRepository.save(new Item(null, "iPhone 13 Pro", "Left my phone in the lecture hall 3. It has a clear case.", "Lecture Hall 3", LocalDate.now(), ItemStatus.LOST, "/uploads/phone.jpg", user1));
@@ -52,7 +52,7 @@ public class DataSeeder implements CommandLineRunner {
             itemRepository.save(new Item(null, "HydroFlask Bottle", "Found a blue water bottle. Turned it in to the security desk.", "Security Desk", LocalDate.now().minusDays(5), ItemStatus.RESOLVED, "/uploads/bottle.jpg", user2));
         }
         
-        // Ensure an Admin account always exists
+
         if (userRepository.findByEmail("admin@example.com").isEmpty()) {
             User admin = new User();
             admin.setName("System Admin");

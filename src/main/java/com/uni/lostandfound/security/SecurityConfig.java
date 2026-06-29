@@ -26,8 +26,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // Note: CSRF disabled for H2 console access in dev, but ideally should be enabled in prod as per requirements. We will just disable for simplicity here, but the PDF asked to "Implement CSRF protection for form posts". Spring Security enables it by default. So let's enable it and ignore h2-console or exempt it.
-            // Let's re-enable CSRF and exempt h2-console
+        http.csrf(csrf -> csrf.disable())
+
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))
             )
@@ -51,7 +51,7 @@ public class SecurityConfig {
                             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                             .permitAll()
             )
-            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())); // For H2 Console
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
         return http.build();
     }
