@@ -58,10 +58,10 @@ public class PageController {
         model.addAttribute("user", user);
         
         if (user.getRole().name().equals("ROLE_ADMIN")) {
-            // Admin can see all users
+
             model.addAttribute("allUsers", userRepository.findAll());
         } else {
-            // Normal user sees their items
+
             model.addAttribute("userItems", itemRepository.findByUserOrderByDateDesc(user));
         }
         

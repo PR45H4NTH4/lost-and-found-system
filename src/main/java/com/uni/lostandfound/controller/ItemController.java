@@ -58,7 +58,7 @@ public class ItemController {
     @GetMapping("/item/new")
     public String showNewItemForm(Model model) {
         Item item = new Item();
-        item.setDate(LocalDate.now()); // Default to today
+        item.setDate(LocalDate.now());
         model.addAttribute("item", item);
         return "item-form";
     }
@@ -90,7 +90,7 @@ public class ItemController {
         Item item = itemService.getItemById(id);
         model.addAttribute("item", item);
         
-        // Check if current user is owner
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         boolean isOwner = auth.getName().equals(item.getUser().getEmail());
         boolean isAdmin = auth.getAuthorities().stream()
