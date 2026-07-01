@@ -58,7 +58,15 @@ public class PageController {
         model.addAttribute("user", user);
         
         if (user.getRole().name().equals("ROLE_ADMIN")) {
-            model.addAttribute("allUsers", userRepository.findAll());
+            java.util.List<com.uni.lostandfound.entity.User> allUsersList = userRepository.findAll();
+            java.util.List<com.uni.lostandfound.entity.User> activeUsers = new java.util.ArrayList<>();
+            java.util.List<com.uni.lostandfound.entity.User> archivedUsers = new java.util.ArrayList<>();
+            for (com.uni.lostandfound.entity.User u : allUsersList) {
+                if (u.isDeleted()) archivedUsers.add(u);
+                else activeUsers.add(u);
+            }
+            model.addAttribute("activeUsers", activeUsers);
+            model.addAttribute("archivedUsers", archivedUsers);
             model.addAttribute("totalUsers", userRepository.count());
             model.addAttribute("totalLost", itemRepository.countByStatus(com.uni.lostandfound.entity.ItemStatus.LOST));
             model.addAttribute("totalFound", itemRepository.countByStatus(com.uni.lostandfound.entity.ItemStatus.FOUND));

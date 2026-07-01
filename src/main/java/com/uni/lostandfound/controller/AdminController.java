@@ -32,8 +32,8 @@ public class AdminController {
         return "redirect:/profile?success=useradded";
     }
 
-    @PostMapping("/user/delete/{id}")
-    public String deleteUser(@PathVariable Long id) {
+    @PostMapping("/user/soft-delete/{id}")
+    public String softDeleteUser(@PathVariable Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userService.findByEmail(auth.getName());
         
@@ -41,8 +41,27 @@ public class AdminController {
             return "redirect:/profile?error=cannotdeleteself";
         }
         
-        userService.deleteUser(id);
-        return "redirect:/profile?success=userdeleted";
+        userService.softDeleteUser(id);
+        return "redirect:/profile?success=usersoftdeleted";
+    }
+
+    @PostMapping("/user/restore/{id}")
+    public String restoreUser(@PathVariable Long id) {
+        userService.restoreUser(id);
+        return "redirect:/profile?success=userrestored";
+    }
+
+    @PostMapping("/user/permanent-delete/{id}")
+    public String permanentDeleteUser(@PathVariable Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findByEmail(auth.getName());
+        
+        if (currentUser.getId().equals(id)) {
+            return "redirect:/profile?error=cannotdeleteself";
+        }
+        
+        userService.permanentDeleteUser(id);
+        return "redirect:/profile?success=userpermanentdeleted";
     }
 
     @PostMapping("/user/reset-password")

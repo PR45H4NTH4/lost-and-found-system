@@ -38,7 +38,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void softDeleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        user.setDeleted(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void restoreUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        user.setDeleted(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void permanentDeleteUser(Long id) {
         userRepository.deleteById(id);
     }
 

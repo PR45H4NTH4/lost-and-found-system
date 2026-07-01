@@ -24,6 +24,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password."));
+                
+        if (user.isDeleted()) {
+            throw new org.springframework.security.authentication.DisabledException("This account has been deactivated.");
+        }
         return new CustomUserDetails(user.getEmail(),
                 user.getPassword(),
                 mapRolesToAuthorities(user.getRole()),

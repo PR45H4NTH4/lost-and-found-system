@@ -88,7 +88,14 @@
                     </div>
                 </div>
 
-                <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                <!-- Tabs for User Management -->
+                <div style="display: flex; gap: 1rem; border-bottom: 2px solid #e5e7eb; margin-bottom: 1.5rem;">
+                    <button id="tab-active" class="btn" style="background: var(--primary-color); border-radius: 8px 8px 0 0; padding: 0.8rem 1.5rem; font-weight: 600;" onclick="switchTab('active')">Active Users</button>
+                    <button id="tab-archived" class="btn btn-secondary" style="background: transparent; color: var(--text-muted); border: none; border-radius: 8px 8px 0 0; padding: 0.8rem 1.5rem; font-weight: 600;" onclick="switchTab('archived')">Archived Users (Trash)</button>
+                </div>
+
+                <!-- Active Users Table -->
+                <div id="content-active" style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: block;">
                     <table style="width: 100%; border-collapse: collapse; text-align: left;">
                         <thead style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
                             <tr>
@@ -100,7 +107,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="sysUser : ${allUsers}" style="border-bottom: 1px solid #e5e7eb;">
+                            <tr th:each="sysUser : ${activeUsers}" style="border-bottom: 1px solid #e5e7eb;">
                                 <td style="padding: 1rem;" th:text="${sysUser.id}">1</td>
                                 <td style="padding: 1rem; font-weight: 500;" th:text="${sysUser.name}">User Name</td>
                                 <td style="padding: 1rem; color: var(--text-muted);" th:text="${sysUser.email}">email</td>
@@ -110,12 +117,53 @@
                                 <td style="padding: 1rem; text-align:right;">
                                     <div th:if="${user.id != sysUser.id}" style="display:flex; justify-content:flex-end; gap:0.5rem;">
                                         <button type="button" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" th:onclick="'showResetPassword(' + ${sysUser.id} + ')'">Reset Pwd</button>
-                                        <form th:action="@{/admin/user/delete/{id}(id=${sysUser.id})}" method="post" onsubmit="return confirm('WARNING: Deleting this user will also PERMANENTLY DELETE all items they have reported! Are you absolutely sure?');" style="margin:0;">
-                                            <button type="submit" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Delete</button>
+                                        <form th:action="@{/admin/user/soft-delete/{id}(id=${sysUser.id})}" method="post" onsubmit="return confirm('Soft delete this user? They will be moved to the archive.');" style="margin:0;">
+                                            <button type="submit" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: #fca5a5; color: #991b1b; border:none;">Archive</button>
                                         </form>
                                     </div>
                                     <span th:if="${user.id == sysUser.id}" style="color: var(--text-muted); font-size: 0.8rem; font-style: italic;">Current User</span>
                                 </td>
+                            </tr>
+                            <tr th:if="${activeUsers == null or activeUsers.empty}">
+                                <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">No active users found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Archived Users Table -->
+                <div id="content-archived" style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: none;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
+                            <tr>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600;">ID</th>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600;">Name</th>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600;">Email</th>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600;">Role</th>
+                                <th style="padding: 1rem; color: #4b5563; font-weight: 600; text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sysUser : ${archivedUsers}" style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="padding: 1rem;" th:text="${sysUser.id}">1</td>
+                                <td style="padding: 1rem; font-weight: 500; text-decoration: line-through; color: var(--text-muted);" th:text="${sysUser.name}">User Name</td>
+                                <td style="padding: 1rem; color: var(--text-muted);" th:text="${sysUser.email}">email</td>
+                                <td style="padding: 1rem;">
+                                    <span th:class="'badge ' + (${sysUser.role.name() == 'ROLE_ADMIN'} ? 'badge-lost' : 'badge-found')" th:text="${sysUser.role.name() == 'ROLE_ADMIN' ? 'ADMIN' : 'USER'}">ROLE</span>
+                                </td>
+                                <td style="padding: 1rem; text-align:right;">
+                                    <div th:if="${user.id != sysUser.id}" style="display:flex; justify-content:flex-end; gap:0.5rem;">
+                                        <form th:action="@{/admin/user/restore/{id}(id=${sysUser.id})}" method="post" style="margin:0;">
+                                            <button type="submit" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: #34d399; color: #064e3b; border:none;">Restore</button>
+                                        </form>
+                                        <form th:action="@{/admin/user/permanent-delete/{id}(id=${sysUser.id})}" method="post" onsubmit="return confirm('WARNING: Permanently deleting this user will also PERMANENTLY DELETE all items they have reported! Are you absolutely sure?');" style="margin:0;">
+                                            <button type="submit" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Delete Forever</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${archivedUsers == null or archivedUsers.empty}">
+                                <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">No archived users found.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -242,6 +290,24 @@
         function showResetPassword(id) {
             document.getElementById('resetUserId').value = id;
             document.getElementById('resetPasswordModal').style.display = 'flex';
+        }
+
+        function switchTab(tab) {
+            if (tab === 'active') {
+                document.getElementById('content-active').style.display = 'block';
+                document.getElementById('content-archived').style.display = 'none';
+                document.getElementById('tab-active').style.background = 'var(--primary-color)';
+                document.getElementById('tab-active').style.color = 'white';
+                document.getElementById('tab-archived').style.background = 'transparent';
+                document.getElementById('tab-archived').style.color = 'var(--text-muted)';
+            } else {
+                document.getElementById('content-active').style.display = 'none';
+                document.getElementById('content-archived').style.display = 'block';
+                document.getElementById('tab-archived').style.background = 'var(--primary-color)';
+                document.getElementById('tab-archived').style.color = 'white';
+                document.getElementById('tab-active').style.background = 'transparent';
+                document.getElementById('tab-active').style.color = 'var(--text-muted)';
+            }
         }
         /*]]>*/
     </script>
