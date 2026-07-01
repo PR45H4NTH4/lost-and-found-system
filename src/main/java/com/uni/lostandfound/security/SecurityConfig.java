@@ -39,6 +39,7 @@ public class SecurityConfig {
                             .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
                             .requestMatchers("/h2-console/**").permitAll()
                             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                            .requestMatchers("/api/courses/**").permitAll()
                             .anyRequest().authenticated()
             ).formLogin(
                     form -> form
