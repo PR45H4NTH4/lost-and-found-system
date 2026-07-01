@@ -27,6 +27,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void saveAdmin(UserRegistrationDto registrationDto) {
+        User user = new User();
+        user.setName(registrationDto.getName());
+        user.setEmail(registrationDto.getEmail());
+        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+        user.setRole(Role.ROLE_ADMIN);
+        
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void resetPassword(Long id, String newPassword) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }

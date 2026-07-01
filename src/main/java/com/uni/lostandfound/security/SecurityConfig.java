@@ -41,6 +41,7 @@ public class SecurityConfig {
                             .requestMatchers("/h2-console/**").permitAll()
                             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                             .requestMatchers("/api/courses/**").permitAll()
+                            .requestMatchers("/admin/**").hasRole("ADMIN")
                             .anyRequest().authenticated()
             ).formLogin(
                     form -> form
