@@ -58,8 +58,11 @@ public class PageController {
         model.addAttribute("user", user);
         
         if (user.getRole().name().equals("ROLE_ADMIN")) {
-
             model.addAttribute("allUsers", userRepository.findAll());
+            model.addAttribute("totalUsers", userRepository.count());
+            model.addAttribute("totalLost", itemRepository.countByStatus(com.uni.lostandfound.entity.ItemStatus.LOST));
+            model.addAttribute("totalFound", itemRepository.countByStatus(com.uni.lostandfound.entity.ItemStatus.FOUND));
+            model.addAttribute("totalResolved", itemRepository.countByStatus(com.uni.lostandfound.entity.ItemStatus.RESOLVED));
         } else {
 
             model.addAttribute("userItems", itemRepository.findByUserOrderByDateDesc(user));

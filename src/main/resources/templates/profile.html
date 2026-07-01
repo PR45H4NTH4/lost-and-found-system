@@ -55,6 +55,25 @@
                 <h3>Admin Dashboard - User Management</h3>
                 <p style="color: var(--text-muted); margin-bottom: 1.5rem;">As an administrator, you have visibility over all registered users in the system.</p>
                 
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="background: rgba(99, 102, 241, 0.1); padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid rgba(99, 102, 241, 0.2);">
+                        <h4 style="color: var(--primary-color); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total Users</h4>
+                        <p style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); margin: 0;" th:text="${totalUsers}">0</p>
+                    </div>
+                    <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid rgba(239, 68, 68, 0.2);">
+                        <h4 style="color: var(--danger); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Lost Items</h4>
+                        <p style="font-size: 2.2rem; font-weight: 800; color: var(--danger); margin: 0;" th:text="${totalLost}">0</p>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <h4 style="color: var(--success); margin: 0 0 0.5rem 0; font-size: 0.9rem;">Found Items</h4>
+                        <p style="font-size: 2.2rem; font-weight: 800; color: var(--success); margin: 0;" th:text="${totalFound}">0</p>
+                    </div>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid rgba(139, 92, 246, 0.2);">
+                        <h4 style="color: #8b5cf6; margin: 0 0 0.5rem 0; font-size: 0.9rem;">Resolved</h4>
+                        <p style="font-size: 2.2rem; font-weight: 800; color: #8b5cf6; margin: 0;" th:text="${totalResolved}">0</p>
+                    </div>
+                </div>
+
                 <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
                     <table style="width: 100%; border-collapse: collapse; text-align: left;">
                         <thead style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">

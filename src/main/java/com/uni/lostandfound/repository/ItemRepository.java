@@ -14,6 +14,8 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findByStatus(ItemStatus status, Pageable pageable);
     
+    long countByStatus(ItemStatus status);
+
     List<Item> findByUserOrderByDateDesc(User user);
     
     Page<Item> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String title, String description, Pageable pageable);
