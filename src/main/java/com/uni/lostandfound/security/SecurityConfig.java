@@ -26,10 +26,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))
+        http.csrf(csrf -> csrf
+                .ignoringRequestMatchers(
+                        new AntPathRequestMatcher("/h2-console/**"),
+                        new AntPathRequestMatcher("/api/courses/**")
+                )
             )
             .authorizeHttpRequests((authorize) ->
                     authorize.requestMatchers("/register/**").permitAll()
