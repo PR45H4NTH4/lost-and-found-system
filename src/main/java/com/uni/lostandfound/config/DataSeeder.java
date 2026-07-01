@@ -40,16 +40,16 @@ public class DataSeeder implements CommandLineRunner {
             userRepository.save(user2);
 
 
-            itemRepository.save(new Item(null, "Brown Leather Wallet", "Lost my brown leather wallet near the library entrance. Contains ID and some cash.", "Main Library", LocalDate.now().minusDays(2), ItemStatus.LOST, "/uploads/wallet.jpg", user1));
-            itemRepository.save(new Item(null, "Keys with Red Keychain", "Found a set of keys with a red Ferrari keychain on the cafeteria bench.", "Student Cafeteria", LocalDate.now().minusDays(1), ItemStatus.FOUND, "/uploads/keys.jpg", user2));
-            itemRepository.save(new Item(null, "iPhone 13 Pro", "Left my phone in the lecture hall 3. It has a clear case.", "Lecture Hall 3", LocalDate.now(), ItemStatus.LOST, "/uploads/phone.jpg", user1));
-            itemRepository.save(new Item(null, "NorthFace Backpack", "Found a black backpack left unattended in the study zone.", "Study Zone B", LocalDate.now().minusDays(3), ItemStatus.FOUND, "/uploads/backpack.jpg", user2));
-            itemRepository.save(new Item(null, "Black Umbrella", "Lost my umbrella yesterday during the rain near the bus stop.", "Bus Stop", LocalDate.now().minusDays(1), ItemStatus.LOST, "/uploads/umbrella.jpg", user1));
-            itemRepository.save(new Item(null, "Sony Headphones", "Found these black over-ear headphones on the gym bleachers.", "University Gym", LocalDate.now(), ItemStatus.FOUND, "/uploads/headphones.jpg", user2));
-            itemRepository.save(new Item(null, "Denim Jacket", "Lost my blue denim jacket. I think I left it in the lab.", "Computer Lab 2", LocalDate.now().minusDays(4), ItemStatus.LOST, "/uploads/jacket.jpg", user1));
-            itemRepository.save(new Item(null, "Silver Wristwatch", "Found a silver Casio watch near the water fountain.", "Science Building", LocalDate.now().minusDays(2), ItemStatus.FOUND, "/uploads/watch.jpg", user2));
-            itemRepository.save(new Item(null, "Wireless Earbuds", "Lost my white wireless earbuds case.", "Basketball Court", LocalDate.now(), ItemStatus.LOST, "/uploads/earbuds.jpg", user1));
-            itemRepository.save(new Item(null, "HydroFlask Bottle", "Found a blue water bottle. Turned it in to the security desk.", "Security Desk", LocalDate.now().minusDays(5), ItemStatus.RESOLVED, "/uploads/bottle.jpg", user2));
+            itemRepository.save(new Item(null, "Brown Leather Wallet", "Lost my brown leather wallet near the library entrance. Contains ID and some cash.", "Main Library", LocalDate.now().minusDays(2), ItemStatus.LOST, "/images/wallet.jpg", user1));
+            itemRepository.save(new Item(null, "Keys with Red Keychain", "Found a set of keys with a red Ferrari keychain on the cafeteria bench.", "Student Cafeteria", LocalDate.now().minusDays(1), ItemStatus.FOUND, "/images/keys.jpg", user2));
+            itemRepository.save(new Item(null, "iPhone 13 Pro", "Left my phone in the lecture hall 3. It has a clear case.", "Lecture Hall 3", LocalDate.now(), ItemStatus.LOST, "/images/phone.jpg", user1));
+            itemRepository.save(new Item(null, "NorthFace Backpack", "Found a black backpack left unattended in the study zone.", "Study Zone B", LocalDate.now().minusDays(3), ItemStatus.FOUND, "/images/backpack.jpg", user2));
+            itemRepository.save(new Item(null, "Black Umbrella", "Lost my umbrella yesterday during the rain near the bus stop.", "Bus Stop", LocalDate.now().minusDays(1), ItemStatus.LOST, "/images/umbrella.jpg", user1));
+            itemRepository.save(new Item(null, "Sony Headphones", "Found these black over-ear headphones on the gym bleachers.", "University Gym", LocalDate.now(), ItemStatus.FOUND, "/images/headphones.jpg", user2));
+            itemRepository.save(new Item(null, "Denim Jacket", "Lost my blue denim jacket. I think I left it in the lab.", "Computer Lab 2", LocalDate.now().minusDays(4), ItemStatus.LOST, "/images/jacket.jpg", user1));
+            itemRepository.save(new Item(null, "Silver Wristwatch", "Found a silver Casio watch near the water fountain.", "Science Building", LocalDate.now().minusDays(2), ItemStatus.FOUND, "/images/watch.jpg", user2));
+            itemRepository.save(new Item(null, "Wireless Earbuds", "Lost my white wireless earbuds case.", "Basketball Court", LocalDate.now(), ItemStatus.LOST, "/images/earbuds.jpg", user1));
+            itemRepository.save(new Item(null, "HydroFlask Bottle", "Found a blue water bottle. Turned it in to the security desk.", "Security Desk", LocalDate.now().minusDays(5), ItemStatus.RESOLVED, "/images/bottle.jpg", user2));
         }
         
 
